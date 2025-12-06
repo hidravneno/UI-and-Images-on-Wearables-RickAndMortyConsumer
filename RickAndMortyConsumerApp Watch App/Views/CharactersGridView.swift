@@ -82,6 +82,3 @@ struct CharactersGridView: View {
     }
 }
 
-#Preview {
-    CharactersGridView()
-}
