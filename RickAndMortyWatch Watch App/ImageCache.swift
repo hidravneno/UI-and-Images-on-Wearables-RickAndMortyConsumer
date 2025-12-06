@@ -10,27 +10,25 @@ import SwiftUI
 class ImageCache {
     static let shared = ImageCache()
     
-    private var cache: [String: Data] = [:]
-    private let cacheQueue = DispatchQueue(label: "com.rickandmorty.imagecache")
+    private let cache = NSCache<NSString, NSData>()
     
-    private init() {}
+    private init() {
+        // Configure cache limits for watchOS
+        cache.countLimit = 100  // Maximum 100 images
+        cache.totalCostLimit = 50_000_000  // 50MB limit
+    }
     
     func get(_ key: String) -> Data? {
-        cacheQueue.sync {
-            return cache[key]
-        }
+        return cache.object(forKey: key as NSString) as Data?
     }
     
     func set(_ key: String, data: Data) {
-        cacheQueue.async {
-            self.cache[key] = data
-        }
+        let nsData = data as NSData
+        cache.setObject(nsData, forKey: key as NSString, cost: data.count)
     }
     
     func clear() {
-        cacheQueue.async {
-            self.cache.removeAll()
-        }
+        cache.removeAllObjects()
     }
 }
 

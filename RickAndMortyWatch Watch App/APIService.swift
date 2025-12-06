@@ -19,29 +19,39 @@ class APIService: ObservableObject {
     
     // MARK: - Characters
     func fetchCharacters(page: Int = 1) async throws -> CharacterResponse {
-        let url = URL(string: "\(baseURL)/character?page=\(page)")!
+        guard let url = URL(string: "\(baseURL)/character?page=\(page)") else {
+            throw APIError.invalidURL
+        }
         return try await fetch(url: url)
     }
     
     func fetchCharacter(id: Int) async throws -> Character {
-        let url = URL(string: "\(baseURL)/character/\(id)")!
+        guard let url = URL(string: "\(baseURL)/character/\(id)") else {
+            throw APIError.invalidURL
+        }
         return try await fetch(url: url)
     }
     
     func searchCharacters(name: String) async throws -> CharacterResponse {
         let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? name
-        let url = URL(string: "\(baseURL)/character?name=\(encodedName)")!
+        guard let url = URL(string: "\(baseURL)/character?name=\(encodedName)") else {
+            throw APIError.invalidURL
+        }
         return try await fetch(url: url)
     }
     
     // MARK: - Episodes
     func fetchEpisodes(page: Int = 1) async throws -> EpisodeResponse {
-        let url = URL(string: "\(baseURL)/episode?page=\(page)")!
+        guard let url = URL(string: "\(baseURL)/episode?page=\(page)") else {
+            throw APIError.invalidURL
+        }
         return try await fetch(url: url)
     }
     
     func fetchEpisode(id: Int) async throws -> Episode {
-        let url = URL(string: "\(baseURL)/episode/\(id)")!
+        guard let url = URL(string: "\(baseURL)/episode/\(id)") else {
+            throw APIError.invalidURL
+        }
         return try await fetch(url: url)
     }
     
